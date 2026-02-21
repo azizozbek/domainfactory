@@ -1,0 +1,14 @@
+{
+  "name": "azizozbek/hosting-manager",
+  "description": "Hosting Domain Manager for Plesk API",
+  "type": "project",
+  "require": {
+    "php": "^8.3",
+    "vlucas/phpdotenv": "^5.5"
+  },
+  "autoload": {
+    "psr-4": {
+      "App\\": "src/"
+    }
+  }
+}
