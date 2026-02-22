@@ -6,9 +6,15 @@ class DomainModel
 {
     private const MAX_DOMAIN_LENGTH = 253;
 
-    public string $domain;
-    public string $ftp_username;
-    public string $ftp_password;
+    public function __construct(
+        public string $domain,
+        public string $ftp_username,
+        public string $ftp_password
+    ){
+        $this->domain = strtolower($domain);
+        $this->ftp_username = trim($ftp_username);
+        $this->ftp_password = trim($ftp_password);
+    }
 
     public function validate(): array|bool
     {
@@ -27,8 +33,8 @@ class DomainModel
         return true;
     }
 
-    public function validateDomain() {
-
+    public function validateDomain(): array
+    {
         $errors = [];
 
         $domain = strtolower(trim($this->domain));
@@ -44,12 +50,19 @@ class DomainModel
         return $errors;
     }
 
-    public function validateFTPPassword() {
-
+    public function validateFTPPassword(): array
+    {
+        $errors = [];
         // Merged composition rule
         if (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/', $this->ftp_password)) {
-            return ['FTP password must contain at least one uppercase letter, one lowercase letter, and one digit.'];
+            $errors[] = 'FTP password must contain at least one uppercase letter, one lowercase letter, and one digit.';
         }
 
+        return $errors;
+    }
+
+    public function convertToXml(string $value): string
+    {
+        return htmlspecialchars($value,ENT_XML1);
     }
 }

@@ -1,7 +1,7 @@
 <details class="border-b border-gray-900/10 bg-gray-100 p-5">
     <summary class="text-xl font-semibold text-gray-900 bg-gray-100 border-b border-gray-300 pb-2">Create a Domain</summary>
 
-    <form class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6" id="domainForm" method="post">
+    <form class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6" id="domainForm" method="post" action="/create">
         <div class="col-span-full">
             <label for="domain" class="block text-sm/6 font-medium text-gray-900">Domainname</label>
             <div class="mt-2">
@@ -12,10 +12,9 @@
                         name="domain"
                         placeholder="example.com"
                         required
-                        pattern="[a-zA-Z0-9]([a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(\.[a-zA-Z]{2,})+"
+                        pattern="[a-zA-Z0-9]([a-zA-Z0-9\-]*[a-zA-Z0-9])?(\.[a-zA-Z0-9\-]+)*\.[a-zA-Z]{2,}"
                         title="Please enter a valid domain name"
                 >
-
             </div>
         </div>
 
@@ -42,7 +41,8 @@
                         class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
                         name="ftp_password"
                         placeholder="********"
-                        pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d!@#$%^&*()_+\-=\[\]{};':&quot;\\|,.<>\/?`~]{8,}$"
+                        pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}"
+                        title="Min 8 characters with at least one uppercase letter, one lowercase letter, and one digit."
                         minlength="8"
                         required
                 >

@@ -9,7 +9,7 @@ class Config {
 
     public static function init() {
         if (!Config::$cache) {
-            $dotenv = Dotenv::createImmutable(__DIR__ . '/../');
+            $dotenv = Dotenv::createUnsafeImmutable(realpath(__DIR__ . '/..'));
             $dotenv->load();
             Config::$cache = true;
         }
