@@ -103,9 +103,11 @@ abstract class PleskApiClient
             return $this;
         }
 
-        $errCode = (string) ($result->errcode ?? 'unknown');
-        $errText = (string) ($result->errtext ?? 'Unknown error');
-        $this->errors[] = $errCode . ' - ' . $errText;
+        $errCode = (int) ($this->result->errcode ?? 0);
+        $error   = PleskErrorCodesEnum::tryFrom($errCode);
+        $message = $error ? $error->message() : (string) ($this->result->errtext ?? 'Unknown error.');
+
+        $this->errors[] = $errCode . ' - ' . $message;
 
         return $this;
     }

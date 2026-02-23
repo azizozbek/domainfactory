@@ -26,6 +26,8 @@ class PleskRemoveDomain extends PleskApiClient
             <result>
                 <status>ok</status>
                 <id>18</id>
+                <errcode>1013</errcode>
+                <errtext>Object not found.</errtext>
             </result>
         </del>
     </site>

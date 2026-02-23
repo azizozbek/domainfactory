@@ -14,6 +14,7 @@ if (session_status() == PHP_SESSION_NONE) {
 if (!isset($_SESSION['nonce'])) {
     $_SESSION['nonce'] = bin2hex(random_bytes(12));
 }
+header("Content-Security-Policy: script-src 'nonce-{$_SESSION['nonce']}'");
 
 $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $path = rtrim($path, '/') ?: '/';

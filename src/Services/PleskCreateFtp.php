@@ -28,6 +28,8 @@ class PleskCreateFtp extends PleskApiClient
             <result>
                 <status>error</status>
                 <id>18</id>
+                <errcode>1013</errcode>
+                <errtext>Object not found.</errtext>
             </result>
         </add>
     </ftp-user>

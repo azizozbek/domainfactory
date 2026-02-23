@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title><?php echo htmlspecialchars($title ?? 'Domain Manager'); ?></title>
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4" <?php $nonce = htmlspecialchars($_SESSION['nonce'] ?? ''); echo $nonce; ?>></script>
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindplus/elements@1" type="module" <?php echo $nonce;  ?>></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4" nonce="<?php $nonce = htmlspecialchars($_SESSION['nonce'] ?? ''); echo $nonce; ?>"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindplus/elements@1" type="module" nonce="<?php echo $nonce;  ?>"></script>
     <script src="/assets/scripts.js" nonce="<?php echo $nonce;  ?>"></script>
 </head>
 <body class="h-full">

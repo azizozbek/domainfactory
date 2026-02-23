@@ -25,8 +25,10 @@ class PleskCreateDomain extends PleskApiClient
     <site>
         <add>
             <result>
-                <status>ok</status>
+                <status>error</status>
                 <id>18</id>
+                <errcode>1013</errcode>
+                <errtext>Object not found.</errtext>
             </result>
         </add>
     </site>

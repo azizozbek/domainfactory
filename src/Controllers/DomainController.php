@@ -47,8 +47,7 @@ class DomainController
         $domainModel = new DomainModel(domain: $_POST['domain']);
         $ftpModel = new FtpModel(ftp_username: $_POST['ftp_username'], ftp_password: $_POST['ftp_password']);
 
-        $this->errors = $domainModel->validate();
-        $this->errors = $ftpModel->validate();
+        $this->errors = array_merge($domainModel->validate(), $ftpModel->validate());
         if (count($this->errors) > 0) {
 
             return;
