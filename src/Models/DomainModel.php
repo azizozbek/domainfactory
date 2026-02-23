@@ -22,7 +22,7 @@ class DomainModel
             $errors[] = 'Domain name must not exceed ' . self::MAX_DOMAIN_LENGTH . ' characters.';
         }
 
-        if (!preg_match('/^[a-z0-9]([a-z0-9\-\.]*[a-z0-9])?(\.[a-z]{2,})$/', $domain)) {
+        if (!preg_match('/^[a-z0-9]([a-z0-9\-]*[a-z0-9])?(\.[a-z]{2,})$/', $domain)) {
             $errors[] = 'Domain name is invalid (e.g. example.com or sub.example.com).';
         }
 

@@ -1,4 +1,4 @@
-<details class="border-b border-gray-900/10 bg-gray-100 p-5" open>
+<details class="border-b border-gray-900/10 bg-gray-100 p-5 rounded-md" open>
     <summary class="text-xl font-semibold text-gray-900 bg-gray-100 border-b border-gray-300 pb-2">Create a Domain</summary>
     <div class="notifications">
         <?php foreach ($errors as $error) { ?>
@@ -12,7 +12,7 @@
             </div>
         <?php } ?>
     </div>
-    <form class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6" id="domainForm" method="post" action="/create">
+    <form class="mt-2 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6" id="domainForm" method="post" action="/create">
         <div class="col-span-full">
             <label for="domain" class="block text-sm/6 font-medium text-gray-900">Domainname</label>
             <div class="mt-2">
@@ -23,9 +23,10 @@
                         name="domain"
                         placeholder="example.com"
                         required
-                        pattern="[a-zA-Z0-9]([a-zA-Z0-9\-]*[a-zA-Z0-9])?(\.[a-zA-Z0-9\-]+)*\.[a-zA-Z]{2,}"
-                        title="Please enter a valid domain name"
+                        pattern="[a-zA-Z0-9]([a-zA-Z0-9\-]*[a-zA-Z0-9])?(\.[a-zA-Z]{2,})"
                 >
+                <span class="text-sm text-gray-500">e.g. example.com</span>
+
             </div>
         </div>
 
@@ -53,16 +54,16 @@
                         name="ftp_password"
                         placeholder="********"
                         pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}"
-                        title="Min 8 characters with at least one uppercase letter, one lowercase letter, and one digit."
                         minlength="8"
                         required
                 >
+                <span class="text-sm text-gray-500">Min 8 characters with at least one uppercase letter, one lowercase letter, and one digit.</span>
             </div>
         </div>
 
         <input type="hidden" id="nonce" name="nonce" value="<?php echo htmlspecialchars($_SESSION['nonce'] ?? ''); ?>">
 
-        <div class="col-span-full mt-6 flex items-center justify-end">
+        <div class="col-span-full flex items-center justify-end">
             <button type="submit" class="flex w-max gap-4 items-center cursor-pointer rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-red-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                 <div role="status" class="text-center w-full flex justify-center w-max gap-4 hidden">
                     <svg aria-hidden="true" class="w-6 h-6 text-neutral-tertiary animate-spin fill-brand" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
