@@ -1,6 +1,17 @@
-<details class="border-b border-gray-900/10 bg-gray-100 p-5">
+<details class="border-b border-gray-900/10 bg-gray-100 p-5" open>
     <summary class="text-xl font-semibold text-gray-900 bg-gray-100 border-b border-gray-300 pb-2">Create a Domain</summary>
-
+    <div class="notifications">
+        <?php foreach ($errors as $error) { ?>
+            <div class="bg-orange-100 border-l-4 border-orange-500 text-orange-700 p-4 mb-2 mt-2" role="alert">
+                <p><?php echo $error; ?></p>
+            </div>
+        <?php }
+        if ($success) { ?>
+            <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4" role="success">
+                <p>Domain created successfully!</p>
+            </div>
+        <?php } ?>
+    </div>
     <form class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6" id="domainForm" method="post" action="/create">
         <div class="col-span-full">
             <label for="domain" class="block text-sm/6 font-medium text-gray-900">Domainname</label>

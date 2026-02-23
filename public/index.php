@@ -25,7 +25,7 @@ if ($path === '/' && $method === 'GET') {
     $domainController->index();
 }
 elseif ($path === '/create' && $method === 'POST') {
-    $domainController->handleFormSubmission();
+    $domainController->index();
 }
 else {
     http_response_code(404);

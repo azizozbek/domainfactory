@@ -4,15 +4,16 @@ namespace App\Services;
 
 use App\Config;
 use App\Models\DomainModel;
+use App\Models\FtpModel;
 use App\Services\PleskApiClient;
 use RuntimeException;
 
-class PleskCreateDomain extends PleskApiClient
+class PleskCreateFtp extends PleskApiClient
 {
-    public int $webspaceId;
-
     public function __construct(
-        private readonly DomainModel $domainModel
+        private readonly FtpModel $ftpModel,
+        private readonly DomainModel $domainModel,
+        private readonly int $webspaceId
     ){
         parent::__construct();
     }
@@ -22,52 +23,47 @@ class PleskCreateDomain extends PleskApiClient
         $xml = $this->buildCreateDomainXml();
         //$response = $this->request($xml);
         $response = "<packet>
-    <site>
+    <ftp-user>
         <add>
             <result>
-                <status>ok</status>
+                <status>error</status>
                 <id>18</id>
             </result>
         </add>
-    </site>
+    </ftp-user>
 </packet>
 ";
 
-        return $this->parseResponse($response, 'site', 'add');
+        return $this->parseResponse($response, 'ftp-user', 'add');
     }
 
     public function parseResponse(string $xmlResponse, $node, $operation): static
     {
         parent::parseResponse($xmlResponse, $node, $operation);
 
-        if (count($this->errors) > 0) {
-
-            return $this;
-        }
-
-        if ($this->success) {
-            $this->webspaceId = (int)$this->result->id;
-        }
-
         return $this;
     }
 
     private function buildCreateDomainXml(): string
     {
-        $ip_address = Config::get('PLESK_IP_ADDRESS'); // get from plesk if multiple exist
+        $webspaceId   = $this->convertToXml($this->webspaceId);
         $domain   = $this->convertToXml($this->domainModel->domain);
+        $ftp_user = $this->convertToXml($this->ftpModel->ftp_username);
+        $ftp_password = $this->convertToXml($this->ftpModel->ftp_password);
 
         return <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
 <packet version="1.6.9.1">
-    <webspace>
-        <add>
-            <gen_setup>
-                <name>{$domain}</name>
-                <ip_address>{$ip_address}</ip_address>
-            </gen_setup>
-        </add>
-    </webspace>
+    <ftp>
+        <create-acct>
+            <webspace-name>{$domain}</webspace-name>
+            <webspace-id>{$webspaceId}</webspace-id>
+            <name>{$ftp_user}</name>
+            <password>{$ftp_password}</password>
+            <home>/</home>
+            <create-non-existent>true</create-non-existent>
+        </create-acct>
+    </ftp>
 </packet>
 XML;
     }

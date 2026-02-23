@@ -7,12 +7,11 @@ use App\Models\DomainModel;
 use App\Services\PleskApiClient;
 use RuntimeException;
 
-class PleskCreateDomain extends PleskApiClient
+class PleskRemoveDomain extends PleskApiClient
 {
-    public int $webspaceId;
-
     public function __construct(
-        private readonly DomainModel $domainModel
+        private readonly DomainModel $domainModel,
+        private readonly int $webspaceId
     ){
         parent::__construct();
     }
@@ -23,51 +22,46 @@ class PleskCreateDomain extends PleskApiClient
         //$response = $this->request($xml);
         $response = "<packet>
     <site>
-        <add>
+        <del>
             <result>
                 <status>ok</status>
                 <id>18</id>
             </result>
-        </add>
+        </del>
     </site>
 </packet>
 ";
 
-        return $this->parseResponse($response, 'site', 'add');
+        return $this->parseResponse($response, 'site', 'del');
     }
 
     public function parseResponse(string $xmlResponse, $node, $operation): static
     {
         parent::parseResponse($xmlResponse, $node, $operation);
 
-        if (count($this->errors) > 0) {
-
-            return $this;
-        }
-
-        if ($this->success) {
-            $this->webspaceId = (int)$this->result->id;
-        }
-
         return $this;
     }
 
     private function buildCreateDomainXml(): string
     {
-        $ip_address = Config::get('PLESK_IP_ADDRESS'); // get from plesk if multiple exist
         $domain   = $this->convertToXml($this->domainModel->domain);
+        $webspaceId   = $this->convertToXml($this->webspaceId);
 
         return <<<XML
 <?xml version="1.0" encoding="UTF-8"?>
 <packet version="1.6.9.1">
-    <webspace>
-        <add>
-            <gen_setup>
+    <site>
+        <del>
+            <filter>
+                <id>{$webspaceId}</id>
+            </filter>
+        </del>
+        <del>
+            <filter>
                 <name>{$domain}</name>
-                <ip_address>{$ip_address}</ip_address>
-            </gen_setup>
-        </add>
-    </webspace>
+            </filter>
+        </del>
+    </site>
 </packet>
 XML;
     }
