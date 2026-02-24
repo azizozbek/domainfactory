@@ -6,6 +6,8 @@ class FtpModel
 {
     private const int MIN_FTP_PASSWORD_LENGTH = 5;
     private const int MAX_FTP_PASSWORD_LENGTH = 255;
+    public const FTP_USERNAME_FIELD = 'ftp_username';
+    public const FTP_PASSWORD_FIELD = 'ftp_password';
 
     public function __construct(
         public string $ftp_username,

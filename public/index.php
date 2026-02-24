@@ -6,10 +6,7 @@ use App\Config;
 use App\Controllers\DomainController;
 
 Config::init();
-
-if (session_status() == PHP_SESSION_NONE) {
-    session_start();
-}
+session_start();
 
 if (!isset($_SESSION['nonce'])) {
     $_SESSION['nonce'] = bin2hex(random_bytes(12));

@@ -16,7 +16,13 @@ class Config {
     }
 
     public static function get($key, $default = null) {
-        return getenv($key) ?? $default;
+
+        $env = getenv($key) ?? $default;
+        if ($env == "false" || $env == "true") {
+            $env = filter_var($env, FILTER_VALIDATE_BOOLEAN);
+        }
+
+        return $env;
     }
 
 }

@@ -17,7 +17,7 @@ abstract class PleskApiClient
 
     public array $errors = [];
     public bool $success = false;
-    public ?SimpleXMLElement $result = null;
+    public array $result = [];
 
 
     public function __construct()
@@ -38,7 +38,9 @@ abstract class PleskApiClient
         curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
         curl_setopt($curl, CURLOPT_HTTPHEADER, $this->_getHeaders());
         curl_setopt($curl, CURLOPT_POSTFIELDS, $request);
-        curl_setopt($curl, CURLOPT_VERBOSE, true); //todo remove in prod
+        if (Config::get('DEBUG')) {
+            curl_setopt($curl, CURLOPT_VERBOSE, true);
+        }
 
         $result = curl_exec($curl);
 
@@ -47,9 +49,11 @@ abstract class PleskApiClient
             $error  = curl_error($curl);
             $info   = curl_getinfo($curl);
 
-            var_dump($errno, $error, $info); //todo
-            error_log("cURL error ({$errno}): {$error}");
-            error_log("cURL info: " . print_r($info, true));
+            if (Config::get('DEBUG')) {
+                var_dump($errno, $error, $info);
+                error_log("cURL error ({$errno}): {$error}");
+                error_log("cURL info: " . print_r($info, true));
+            }
         }
 
         curl_close($curl);
@@ -88,29 +92,34 @@ abstract class PleskApiClient
             return $this;
         }
 
-        $this->result = $xml->{$node}->{$operation}->result ?? null;
+        $jsonResponse = json_decode(json_encode($xml->{$node}->{$operation}), false);
+        $this->result = (is_array($jsonResponse->result)) ? $jsonResponse->result : [$jsonResponse->result];
 
-        if ($this->result === null) {
+        if (count($this->result) === 0) {
             $this->errors[] = "Unexpected response";
 
             return $this;
         }
 
-        $status = (string) $this->result->status;
+        if (count($this->result) > 1) {
+
+            return $this;
+        }
+
+        $result = $this->result[0];
+        $status = (string) $result->status;
         if ($status === 'ok') {
             $this->success = true;
 
             return $this;
         }
 
-        $errCode = (int) ($this->result->errcode ?? 0);
+        $errCode = (int) ($result->errcode ?? 0);
         $error   = PleskErrorCodesEnum::tryFrom($errCode);
-        $message = $error ? $error->message() : (string) ($this->result->errtext ?? 'Unknown error.');
+        $message = $error ? $error->message() : (string) ($result->errtext ?? 'Unknown error.');
 
         $this->errors[] = $errCode . ' - ' . $message;
 
         return $this;
     }
-
-
 }

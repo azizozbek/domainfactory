@@ -1,7 +1,10 @@
 <details class="border-b border-gray-900/10 bg-gray-100 p-5 rounded-md" open>
     <summary class="text-xl font-semibold text-gray-900 bg-gray-100 border-b border-gray-300 pb-2">Create a Domain</summary>
     <div class="notifications">
-        <?php foreach ($errors as $error) { ?>
+        <?php use App\Models\DomainModel;
+        use App\Models\FtpModel;
+
+        foreach ($errors as $error) { ?>
             <div class="bg-orange-100 border-l-4 border-orange-500 text-orange-700 p-4 mb-2 mt-2" role="alert">
                 <p><?php echo $error; ?></p>
             </div>
@@ -20,10 +23,11 @@
                         type="text"
                         id="domain"
                         class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
-                        name="domain"
+                        name="<?php echo DomainModel::DOMAIN_FIELD; ?>"
                         placeholder="example.com"
                         required
                         pattern="[a-zA-Z0-9]([a-zA-Z0-9\-]*[a-zA-Z0-9])?(\.[a-zA-Z]{2,})"
+                        value="<?php echo htmlspecialchars($_POST[DomainModel::DOMAIN_FIELD] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
                 >
                 <span class="text-sm text-gray-500">e.g. example.com</span>
 
@@ -37,9 +41,10 @@
                         type="text"
                         id="ftp_username"
                         class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
-                        name="ftp_username"
+                        name="<?php echo FtpModel::FTP_USERNAME_FIELD; ?>"
                         placeholder="ftpuser"
                         required
+                        value="<?php echo htmlspecialchars($_POST[FtpModel::FTP_USERNAME_FIELD] ?? '', ENT_QUOTES, 'UTF-8'); ?>"
                 >
             </div>
         </div>
@@ -51,7 +56,7 @@
                         type="password"
                         id="ftp_password"
                         class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
-                        name="ftp_password"
+                        name="<?php echo FtpModel::FTP_PASSWORD_FIELD; ?>"
                         placeholder="********"
                         pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}"
                         minlength="8"

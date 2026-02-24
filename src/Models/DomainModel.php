@@ -5,6 +5,7 @@ namespace App\Models;
 class DomainModel
 {
     private const MAX_DOMAIN_LENGTH = 253;
+    public const DOMAIN_FIELD = 'domain';
 
     public function __construct(
         public string $domain,
