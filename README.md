@@ -1,3 +1,3 @@
-PLESK_API_URL=https://localhost:8443/enterprise/control/agent.php
-PLESK_USERNAME=admin
-PLESK_PASSWORD=password
+# Control your Plesk Subscription
+* You can list all your webspaces (domain accounts) from plesk
+* You can create new webspaces
