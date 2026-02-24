@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\DomainModel;
 use App\Models\FtpModel;
+use App\Services\CacheService;
 use App\Services\PleskCreateDomain;
 use App\Services\PleskCreateFtp;
 use App\Services\PleskCreateWebspace;
@@ -47,6 +48,14 @@ class DomainController
         ]);
     }
 
+    public function refreshDomainList()
+    {
+        $cacheService = CacheService::getInstance();
+        $cacheService->forget("webspaces");
+
+        header('Location: /');
+    }
+
     public function handleFormSubmission(): void
     {
         if ($_POST[DomainModel::DOMAIN_FIELD] === '' || $_POST[FtpModel::FTP_USERNAME_FIELD] === '' || $_POST[FtpModel::FTP_PASSWORD_FIELD] === '') {
@@ -74,7 +83,6 @@ class DomainController
         }
 
         $_SESSION['success'] = true;
-        var_dump($_SESSION['success']);
         $this->resetForm();
 
         header('Location: /');

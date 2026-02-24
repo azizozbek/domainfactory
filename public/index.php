@@ -25,6 +25,9 @@ if ($path === '/' && $method === 'GET') {
 elseif ($path === '/create' && $method === 'POST') {
     $domainController->index();
 }
+elseif ($path === '/refresh' && $method === 'GET') {
+    $domainController->refreshDomainList();
+}
 else {
     http_response_code(404);
     echo "404 - Page Not Found";

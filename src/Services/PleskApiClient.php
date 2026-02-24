@@ -50,7 +50,6 @@ abstract class PleskApiClient
             $info   = curl_getinfo($curl);
 
             if (Config::get('DEBUG')) {
-                var_dump($errno, $error, $info);
                 error_log("cURL error ({$errno}): {$error}");
                 error_log("cURL info: " . print_r($info, true));
             }
