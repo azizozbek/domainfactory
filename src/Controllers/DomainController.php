@@ -5,18 +5,15 @@ namespace App\Controllers;
 use App\Models\DomainModel;
 use App\Models\FtpModel;
 use App\Services\CacheService;
-use App\Services\PleskCreateDomain;
-use App\Services\PleskCreateFtp;
 use App\Services\PleskCreateWebspace;
 use App\Services\PleskGetWebspaces;
-use App\Services\PleskRemoveDomain;
 use App\View;
 
 class DomainController
 {
     private array $errors = [];
 
-    public function index()
+    public function index(): void
     {
         if ($_POST) {
             $this->handleFormSubmission();
@@ -26,15 +23,7 @@ class DomainController
         unset($_SESSION['success']);
 
         $view = new View('layout');
-
-        $pleskGetWebSpaces = new PleskGetWebSpaces();
-        if (count($pleskGetWebSpaces->webspaces) === 0) {
-            $pleskGetWebSpaces->send();
-        }
-        $domainList = new View('domain_list');
-        $domainList->with([
-            'list' => $pleskGetWebSpaces->webspaces
-        ]);
+        $domainList = $this->prepareDomainList();
 
         $domainForm = new View('domain_form');
         $domainForm->with([
@@ -48,12 +37,25 @@ class DomainController
         ]);
     }
 
-    public function refreshDomainList()
+    public function refreshDomainList(): void
     {
+        $nonce = $_GET['nonce'] ?? null;
+        $request = $_SERVER['HTTP_X_REQUESTED_WITH'] ?? "";
+
+        if ($request != 'XMLHttpRequest' || is_null($nonce)) {
+            http_response_code(404);
+            exit;
+        }
+
+        if (!hash_equals($_SESSION['nonce'], $nonce)) {
+            http_response_code(403);
+            exit;
+        }
+
         $cacheService = CacheService::getInstance();
         $cacheService->forget("webspaces");
 
-        header('Location: /');
+        echo $this->prepareDomainList()->render();
     }
 
     public function handleFormSubmission(): void
@@ -95,5 +97,20 @@ class DomainController
         unset($_POST[FtpModel::FTP_USERNAME_FIELD]);
         unset($_POST[FtpModel::FTP_PASSWORD_FIELD]);
 
+    }
+
+    private function prepareDomainList(): View
+    {
+        $pleskGetWebSpaces = new PleskGetWebSpaces();
+        if (count($pleskGetWebSpaces->webspaces) === 0) {
+            $pleskGetWebSpaces->send();
+        }
+
+        $domainList = new View('domain_list');
+        $domainList->with([
+            'list' => $pleskGetWebSpaces->webspaces
+        ]);
+
+        return $domainList;
     }
 }

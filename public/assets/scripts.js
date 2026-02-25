@@ -53,3 +53,45 @@ function validateFtpPassword(password, ftp_username) {
 
     return errors;
 }
+
+
+let refreshDomain = document.getElementById("refreshDomainList");
+let rotator = document.getElementById("rotator");
+let domainList = document.getElementById("domainList");
+let isFetching = false;
+refreshDomain.addEventListener("click", function() {
+
+    if (isFetching) return;
+    isFetching = true;
+
+    const url = this.dataset.url;
+    rotator.classList.add("animate-spin");
+    domainList.classList.add("animate-pulse");
+
+    fetch(url, {
+        headers: {
+            "X-Requested-With": "XMLHttpRequest"
+        }
+    })
+        .then(response => {
+            if (!response.ok) {
+
+                throw new Error(response.status + " - " + response.statusText);
+            }
+
+            return response.text();
+        })
+        .then(data => {
+            domainList.innerHTML = data;
+        })
+        .catch(error => {
+            console.log(error)
+        })
+        .finally(() => {
+
+            rotator.classList.remove("animate-spin");
+            domainList.classList.remove("animate-pulse");
+
+            isFetching = false;
+        });
+});
